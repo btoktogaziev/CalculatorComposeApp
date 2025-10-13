@@ -188,10 +188,3 @@ fun ButtonContainer() {
         }
     }
 }
-
-
-@Preview(showSystemUi = true)
-@Composable
-fun ButtonPreview() {
-    CalculatorScreen()
-}
