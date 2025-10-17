@@ -1,4 +1,4 @@
-package com.example.calculatorcomposeapp.ui.screens
+package com.example.calculatorcomposeapp.presentation.ui.screens.calculator
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,24 +25,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.example.calculatorcomposeapp.ui.theme.LightBlue
-import com.example.calculatorcomposeapp.ui.theme.LightGrayBg
-import com.example.calculatorcomposeapp.ui.theme.PrimePink
+import com.example.calculatorcomposeapp.presentation.ui.theme.LightBlue
+import com.example.calculatorcomposeapp.presentation.ui.theme.LightGrayBg
+import com.example.calculatorcomposeapp.presentation.ui.theme.PrimePink
 import kotlinx.coroutines.launch
 
 @Composable
-fun CalculatorScreen() {
+fun CalculatorScreen(
+    modifier: Modifier,
+    viewModel: CalculatorViewModel
+) {
+    val state = viewModel.state.collectAsState().value
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Row(
             modifier = Modifier
-                .weight(0.8f)
+                .weight(0.55f)
                 .background(
                     color = LightGrayBg,
                     shape = RoundedCornerShape(
@@ -55,16 +59,20 @@ fun CalculatorScreen() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            TextContainer()
+            Display(
+                expr = state.displayText,
+            )
         }
         Box(modifier = Modifier.weight(1.5f)) {
-            ButtonContainer()
+            ButtonContainer(
+                onButtonClick = { value -> viewModel.handleInput(value) }
+            )
         }
     }
 }
 
 @Composable
-fun TextContainer() {
+fun Display(expr: String) {
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -79,13 +87,68 @@ fun TextContainer() {
             .fillMaxWidth()
             .padding(end = 8.dp)
             .horizontalScroll(state = scrollState),
-        text = "0",
+        text = expr,
         textAlign = TextAlign.End,
         maxLines = 1,
         style = TextStyle(
             fontSize = 48.sp,
         )
     )
+}
+
+@Composable
+fun ButtonContainer(
+    onButtonClick: (String) -> Unit
+) {
+    val buttons = listOf<List<String>>(
+        listOf("AC", "()", "%", "÷"),
+        listOf("7", "8", "9", "×"),
+        listOf("4", "5", "6", "—"),
+        listOf("1", "2", "3", "+"),
+        listOf("0", "•", "⌫", "=")
+    )
+    val extraButtons = listOf("√", "π", "^", "!", "▵")
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.6f)
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            extraButtons.forEach {
+                CalcExtraButton(text = it) {
+                    onButtonClick(it)
+                }
+            }
+        }
+
+
+        buttons.forEach { row ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                row.forEach {
+                    CalcButton(
+                        text = it,
+                        color = getButtonColor(it)
+                    ) {
+                        onButtonClick(it)
+                    }
+                }
+            }
+
+        }
+    }
 }
 
 @Composable
@@ -117,6 +180,7 @@ fun CalcExtraButton(
     text: String,
     onClick: () -> Unit
 ) {
+
     Button(
         modifier = Modifier.size(64.dp),
         onClick = onClick,
@@ -134,57 +198,10 @@ fun CalcExtraButton(
     }
 }
 
-@Composable
-fun ButtonContainer() {
-    val buttons = listOf<List<String>>(
-        listOf("AC", "()", "%", "÷"),
-        listOf("7", "8", "9", "×"),
-        listOf("4", "5", "6", "—"),
-        listOf("1", "2", "3", "+"),
-        listOf("0", "•", "⌫", "=")
-    )
-    val extraButtons = listOf("√", "π", "^", "!", "▵")
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp),
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.6f)
-                .padding(vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            extraButtons.forEach {
-                CalcExtraButton(text = it) { }
-            }
-        }
-
-
-        buttons.forEach { row ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                row.forEach {
-                    CalcButton(
-                        text = it,
-                        color = if (it == "AC") {
-                            PrimePink
-                        } else if (it == "()" || it == "%" || it == "÷" || it == "+" || it == "=" || it == "×" || it == "—") {
-                            LightBlue
-                        } else LightGrayBg
-                    ) {
-
-                    }
-                }
-            }
-
-        }
+private fun getButtonColor(text: String): Color {
+    return when {
+        text == "AC" -> PrimePink
+        text in listOf("()", "%", "÷", "+", "=", "×", "—") -> LightBlue
+        else -> LightGrayBg
     }
 }
