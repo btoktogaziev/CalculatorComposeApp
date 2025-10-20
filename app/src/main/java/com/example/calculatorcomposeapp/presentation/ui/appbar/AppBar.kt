@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.calculatorcomposeapp.R
+import com.example.calculatorcomposeapp.presentation.ui.theme.RadioButtonColor
 
 @Composable
 fun AppBar(onThemeSelected: (String) -> Unit) {
@@ -96,6 +98,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
+                        colors = RadioButtonDefaults.colors(RadioButtonColor),
                         selected = selectedItem == "Light",
                         onClick = { selectedItem = "Light" }
                     )
@@ -127,7 +130,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
                     onDismiss
                 }
             ) {
-                Text("Ок")
+                Text("Ок", color = MaterialTheme.colorScheme.onSurface)
             }
         },
         dismissButton = {
@@ -136,7 +139,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
                     onDismiss
                 }
             ) {
-                Text("Отмена")
+                Text("Отмена", color = MaterialTheme.colorScheme.onSurface)
             }
         })
 }
