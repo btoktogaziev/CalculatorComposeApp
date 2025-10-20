@@ -117,13 +117,13 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
             }
         },
         onDismissRequest = {
-            onDismiss
+            onDismiss()
         },
         confirmButton = {
             TextButton(
                 onClick = {
                     onThemeSelected(selectedItem)
-                    onDismiss
+                    onDismiss()
                 }
             ) {
                 Text("Ок", color = MaterialTheme.colorScheme.onSurface)
@@ -132,7 +132,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
         dismissButton = {
             TextButton(
                 onClick = {
-                    onDismiss
+                    onDismiss()
                 }
             ) {
                 Text("Отмена", color = MaterialTheme.colorScheme.onSurface)
