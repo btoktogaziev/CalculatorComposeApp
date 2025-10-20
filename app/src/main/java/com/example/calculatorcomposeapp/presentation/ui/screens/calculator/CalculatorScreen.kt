@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,9 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.example.calculatorcomposeapp.presentation.ui.theme.LightBlue
-import com.example.calculatorcomposeapp.presentation.ui.theme.LightGrayBg
-import com.example.calculatorcomposeapp.presentation.ui.theme.PrimePink
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,7 +46,7 @@ fun CalculatorScreen(
             modifier = Modifier
                 .weight(0.55f)
                 .background(
-                    color = LightGrayBg,
+                    color = MaterialTheme.colorScheme.tertiary,
                     shape = RoundedCornerShape(
                         topStart = 0.dp,
                         topEnd = 0.dp,
@@ -91,7 +90,7 @@ fun Display(expr: String) {
         textAlign = TextAlign.End,
         maxLines = 1,
         style = TextStyle(
-            fontSize = 48.sp,
+            fontSize = 64.sp,
         )
     )
 }
@@ -107,7 +106,7 @@ fun ButtonContainer(
         listOf("1", "2", "3", "+"),
         listOf("0", "•", "⌫", "=")
     )
-    val extraButtons = listOf("√", "π", "^", "!", "▵")
+    val extraButtons = listOf("√", "π", "^", "!")
 
     Column(
         modifier = Modifier
@@ -128,8 +127,6 @@ fun ButtonContainer(
                 }
             }
         }
-
-
         buttons.forEach { row ->
             Row(
                 modifier = Modifier
@@ -168,7 +165,7 @@ fun CalcButton(
             style = TextStyle(
                 letterSpacing = (-0.025).em,
                 fontSize = 32.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.Monospace
             )
         )
@@ -180,28 +177,28 @@ fun CalcExtraButton(
     text: String,
     onClick: () -> Unit
 ) {
-
     Button(
         modifier = Modifier.size(64.dp),
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(Color.Transparent),
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
     ) {
         Text(
             text = text,
             textAlign = TextAlign.Center,
             style = TextStyle(
                 fontSize = 24.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.Monospace
             )
         )
     }
 }
 
+@Composable
 private fun getButtonColor(text: String): Color {
     return when {
-        text == "AC" -> PrimePink
-        text in listOf("()", "%", "÷", "+", "=", "×", "—") -> LightBlue
-        else -> LightGrayBg
+        text == "AC" -> MaterialTheme.colorScheme.primary
+        text in listOf("()", "%", "÷", "+", "=", "×", "—") -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.tertiary
     }
 }
