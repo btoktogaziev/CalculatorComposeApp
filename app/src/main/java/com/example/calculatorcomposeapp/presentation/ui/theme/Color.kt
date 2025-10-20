@@ -1,6 +1,5 @@
 package com.example.calculatorcomposeapp.presentation.ui.theme
 
-import android.hardware.lights.Light
 import androidx.compose.ui.graphics.Color
 
 val LightGrayBg = Color(0xffdde3ef)

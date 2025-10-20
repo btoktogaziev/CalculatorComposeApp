@@ -74,7 +74,7 @@ class CalculatorViewModel : ViewModel() {
                 "=" -> {
                     try {
                         val finalExpr = expression + ")".repeat(openBrackets)
-                        val result = Calculator.calculateInfixWithTwoStack(finalExpr)
+                        val result = Calculator.calculateInfixWithTwoStacks(finalExpr)
                         expression =
                             if (result % 1 == 0.0) result.toLong().toString() else result.toString()
                                 .trimEnd('0').trimEnd('.')
@@ -110,7 +110,7 @@ class CalculatorViewModel : ViewModel() {
     }
 
     private fun Char.isDigitOrClosingBracket(): Boolean {
-        return isDigit() || this == ')'
+        return isDigit()
     }
 }
 
