@@ -1,5 +1,6 @@
 package com.example.calculatorcomposeapp.presentation.ui.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import com.example.calculatorcomposeapp.presentation.ui.theme.CalculatorComposeA
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
             var selectedTheme by remember { mutableStateOf("System") }
             val darkTheme = when (selectedTheme) {
