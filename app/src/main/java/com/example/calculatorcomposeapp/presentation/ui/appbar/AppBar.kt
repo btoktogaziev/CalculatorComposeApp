@@ -31,7 +31,7 @@ import com.example.calculatorcomposeapp.R
 import com.example.calculatorcomposeapp.presentation.ui.theme.RadioButtonColor
 
 @Composable
-fun AppBar(onThemeSelected: (String) -> Unit) {
+fun AppBar(selectedTheme: String, onThemeSelected: (String) -> Unit) {
     var opened by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     @OptIn(ExperimentalMaterial3Api::class)
@@ -71,15 +71,19 @@ fun AppBar(onThemeSelected: (String) -> Unit) {
     if (showDialog) {
         AlertDialogForTheme(
             onThemeSelected = onThemeSelected,
+            selectedTheme = selectedTheme,
             onDismiss = { showDialog = false }
         )
     }
 }
 
 @Composable
-fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit) {
-    var selectedItem by remember { mutableStateOf("Light") }
-
+fun AlertDialogForTheme(
+    selectedTheme: String,
+    onThemeSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var selectedItem by remember(selectedTheme) { mutableStateOf(selectedTheme) }
     AlertDialog(
         icon = {
             Icon(
@@ -102,6 +106,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
+                        colors = RadioButtonDefaults.colors(RadioButtonColor),
                         selected = selectedItem == "Dark",
                         onClick = { selectedItem = "Dark" }
                     )
@@ -109,6 +114,7 @@ fun AlertDialogForTheme(onThemeSelected: (String) -> Unit, onDismiss: () -> Unit
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
+                        colors = RadioButtonDefaults.colors(RadioButtonColor),
                         selected = selectedItem == "System",
                         onClick = { selectedItem = "System" }
                     )
