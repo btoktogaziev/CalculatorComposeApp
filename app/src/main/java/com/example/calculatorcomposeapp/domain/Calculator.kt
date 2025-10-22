@@ -125,23 +125,27 @@ object Calculator {
                 }
                 // если символ один из этих операторов, то
                 '+', '-', '*', '/', '^', '!', '%', '(', ')' -> {
+                    val listForCheck = listOf(
+                        "(",
+                        "+",
+                        "-",
+                        "*",
+                        "/",
+                        "^"
+                    )
                     // проверяется не является ли минус унарным, в начале выражения или другого оператора
-                    if (c == '-' && (chars.isEmpty() || chars.last() in listOf(
-                            "(",
-                            "+",
-                            "-",
-                            "*",
-                            "/",
-                            "^"
-                        ))
+                    if (c == '-' && (chars.isEmpty() || chars.last() in listForCheck)
                     ) {
                         // добавляется символ унарного оператора
                         chars.add("-u")
+                        i++
+                    } else if (c == '+' && (chars.isEmpty() || chars.last() in listForCheck)) {
+                        i++
                     } else {
                         // добавляется сам оператор
                         chars.add(c.toString())
+                        i++
                     }
-                    i++
                 }
                 // неизвестные символы
                 else -> throw IllegalArgumentException("Unknown symbol: $c")
